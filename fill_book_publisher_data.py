@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import sqlite3
 
-file_path = ("C:/Users/homec/Downloads/BooksDatasetClean.csv")
+file_path = ("C:\\Users\\homec\\csc-4402-project\\BooksDatasetClean.csv")
 
 
 def process_single_csv():
