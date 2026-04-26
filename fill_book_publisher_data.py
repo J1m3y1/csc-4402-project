@@ -16,7 +16,7 @@ def process_single_csv():
                 reader = csv.DictReader(f)
 
                 for i, row in enumerate(reader):
-                    if i >= 100: 
+                    if i >= 500: 
                         break
                     cursor.execute("insert or ignore into publishers (publisher_name, country) values (?, ?)", (row['Publisher'], 'USA'))  # Assuming publisher name is in the third column
                     cursor.execute("select publisher_id from publishers where publisher_name = ?", (row['Publisher'],))

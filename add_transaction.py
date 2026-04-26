@@ -19,7 +19,7 @@ def add_transaction():
             book_ids = list(book_prices.keys())
             customer_ids = [c[0] for c in customers]
 
-            for i in range(25):
+            for i in range(500):
                 # Step 1: Prepare data (No manual order_id here)
                 customer = int(np.random.choice(customer_ids))
                 book = int(np.random.choice(book_ids))
