@@ -31,6 +31,7 @@ sql_statements = [
             title text not null,
             price real not null,
             stock_quantity integer not null,
+            publish_date text,
             foreign key (publisher_id) references publishers (publisher_id)
         );""",
     """create table if not exists authors (
@@ -64,7 +65,7 @@ sql_statements = [
             review_id integer primary key,
             customer_id integer not null,
             book_id integer not null,
-            rating integer not null,
+            rating real not null,
             review_date text not null,
             foreign key (customer_id) references customers (customer_id),
             foreign key (book_id) references books (book_id)
