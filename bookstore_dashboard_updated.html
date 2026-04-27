@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookstore Database Showcase</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(19, 28, 54, 0.88);
+      --panel-2: rgba(13, 19, 38, 0.92);
+      --text: #eef2ff;
+      --muted: #a7b0d6;
+      --line: rgba(167, 176, 214, 0.16);
+      --accent: #7c3aed;
+      --accent-2: #22c55e;
+      --accent-3: #38bdf8;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 22px 50px rgba(0,0,0,.28);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background:
+      radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 30%),
+      radial-gradient(circle at top right, rgba(56,189,248,.18), transparent 22%),
+      linear-gradient(180deg, #090d1a 0%, var(--bg) 100%);
+      color: var(--text); font-family: Inter, Segoe UI, Roboto, Arial, sans-serif; }
+    body { padding: 28px; }
+    .wrap { max-width: 1380px; margin: 0 auto; }
+    .hero { background: linear-gradient(135deg, rgba(124,58,237,.18), rgba(56,189,248,.12)); border: 1px solid var(--line); border-radius: 32px; box-shadow: var(--shadow); padding: 34px; display: grid; grid-template-columns: 1.4fr .9fr; gap: 24px; backdrop-filter: blur(8px); }
+    .eyebrow { display: inline-flex; gap: 10px; align-items: center; font-size: 12px; text-transform: uppercase; letter-spacing: .18em; color: #d8c9ff; font-weight: 700; }
+    .eyebrow .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-3)); box-shadow: 0 0 18px rgba(124,58,237,.8); }
+    h1 { font-size: clamp(32px, 5vw, 58px); line-height: .96; margin: 14px 0 14px; letter-spacing: -0.04em; }
+    .lead { color: var(--muted); font-size: 17px; line-height: 1.7; max-width: 72ch; }
+    .hero-card { background: rgba(9,13,26,.55); border: 1px solid var(--line); border-radius: 24px; padding: 18px 18px 12px; }
+    .hero-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+    .mini { padding: 16px; border-radius: 20px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.05); }
+    .mini .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .mini .value { font-size: 28px; font-weight: 800; margin-top: 8px; }
+    .mini .sub { color: #d7dcf3; font-size: 13px; margin-top: 6px; }
+    .section { margin-top: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+    .card h2 { margin: 0 0 6px; font-size: 20px; }
+    .card p.subtle { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .stat { min-height: 142px; display: flex; flex-direction: column; justify-content: space-between; }
+    .stat .kicker { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+    .stat .big { font-size: 40px; font-weight: 900; letter-spacing: -0.04em; margin-top: 10px; }
+    .stat .tiny { color: #ced4f7; font-size: 14px; line-height: 1.5; }
+    .accent-bar { height: 6px; border-radius: 999px; margin-top: 14px; background: linear-gradient(90deg, var(--accent), var(--accent-3)); opacity: .9; }
+    .bar-list { display: grid; gap: 12px; }
+    .bar-row { display: grid; grid-template-columns: minmax(120px, 1.4fr) 3fr auto; gap: 12px; align-items: center; }
+    .bar-row .name { color: #edf1ff; font-size: 14px; }
+    .bar { height: 12px; background: rgba(255,255,255,.06); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,.05); }
+    .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-3)); }
+    .val { color: #d8ddfb; font-size: 13px; font-weight: 700; }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill { padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); color: #ecf0ff; font-size: 14px; }
+    .schema-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .schema-item { padding: 14px; border-radius: 18px; border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.03); }
+    .schema-item .t { font-weight: 800; }
+    .schema-item .meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .schema-item .rows { margin-top: 10px; font-size: 24px; font-weight: 900; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.06); vertical-align: top; font-size: 14px; }
+    th { color: #d6ddff; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    td { color: #f3f5ff; }
+    .muted { color: var(--muted); }
+    .search { width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); color: white; outline: none; margin-bottom: 14px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgba(124,58,237,.16); color: #eadfff; border: 1px solid rgba(124,58,237,.25); }
+    .badge.warn { background: rgba(245,158,11,.12); color: #ffefc7; border-color: rgba(245,158,11,.24); }
+    .badge.good { background: rgba(34,197,94,.12); color: #d7ffe4; border-color: rgba(34,197,94,.24); }
+    .foot { margin-top: 18px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .two-col { columns: 2; column-gap: 24px; }
+    @media (max-width: 1120px) {
+      .hero, .grid-4, .grid-2, .schema-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 760px) {
+      body { padding: 16px; }
+      .hero, .grid-4, .grid-2, .schema-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 1fr; }
+      .two-col { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> CSC 4402 Group 1 • Bookstore Database Showcase</div>
+        <h1>Visualizing Relational Tables<br />with HTML.</h1>
+        <div class="lead">SQLite Dashboard: Visual snapshot of the catalog, customer footprint, inventory makeup, and the schema’s ready-for-growth commerce layer.</div>
+        <div class="hero-grid">
+          <div class="mini"><div class="label">Current catalog</div><div class="value">500 books</div><div class="sub">with 614 linked authors and 288 categories</div></div>
+          <div class="mini"><div class="label">Inventory value</div><div class="value">$169,443.24</div><div class="sub">estimated from price × stock quantity</div></div>
+          <div class="mini"><div class="label">Customer base</div><div class="value">180</div><div class="sub">sample registered customers across multiple states</div></div>
+          <div class="mini"><div class="label">Transactions</div><div class="value">500 orders</div><div class="sub">with 500 payments and $8,267.19 in generated order totals</div></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h2>Project readout</h2>
+        <p class="subtle">Our schema supports catalog, customers, authors, publishers, categories, orders, payments, and reviews. The updated dataset now includes catalog, customer, transaction, payment, and review records.</p>
+        <div class="pill-row">
+          <div class="badge good">Catalog populated</div>
+          <div class="badge warn">Commerce populated</div>
+          <div class="badge">HTML portfolio layer added</div>
+        </div>
+        <div class="foot"></div>
+      </div>
+    </section>
+
+    <section class="section grid-4">
+      <div class="card stat"><div><div class="kicker">Average price</div><div class="big">$6.82</div></div><div><div class="tiny"></div><div class="accent-bar"></div></div></div>
+      <div class="card stat"><div><div class="kicker">Average stock</div><div class="big">50.8</div></div><div><div class="tiny"></div><div class="accent-bar"></div></div></div>
+      <div class="card stat"><div><div class="kicker">Publishers</div><div class="big">500</div></div><div><div class="tiny">Publisher records loaded from the expanded book sample.</div><div class="accent-bar"></div></div></div>
+      <div class="card stat"><div><div class="kicker">Reviews + payments</div><div class="big">250 / 500</div></div><div><div class="tiny">Average review rating: 4.77/10.</div><div class="accent-bar"></div></div></div>
+    </section>
+
+    <section class="section grid-2">
+      <div class="card">
+        <h2>Top category coverage</h2>
+        <p class="subtle">Which subject areas dominate the loaded catalog right now.</p>
+        <div id="categoryBars" class="bar-list"></div>
+      </div>
+      <div class="card">
+        <h2>Publisher presence</h2>
+        <p class="subtle">Highest-count publishers in the current bookstore sample.</p>
+        <div id="publisherBars" class="bar-list"></div>
+      </div>
+    </section>
+
+    <section class="section grid-2">
+      <div class="card">
+        <h2>Customer footprint</h2>
+        <p class="subtle">Geographic distribution of the generated customer sample.</p>
+        <div id="statePills" class="pill-row"></div>
+      </div>
+      <div class="card">
+        <h2>Price distribution</h2>
+        <p class="subtle">The current data is heavily skewed toward lower-priced books.</p>
+        <div id="priceBars" class="bar-list"></div>
+      </div>
+    </section>
+
+
+    <section class="section grid-2">
+      <div class="card">
+        <h2>Order status breakdown</h2>
+        <p class="subtle">Distribution of generated orders in the transaction dataset.</p>
+        <div id="orderStatusBars" class="bar-list"></div>
+      </div>
+      <div class="card">
+        <h2>Payment status breakdown</h2>
+        <p class="subtle">Completed versus pending payment records.</p>
+        <div id="paymentStatusBars" class="bar-list"></div>
+      </div>
+    </section>
+
+    <section class="section grid-2">
+      <div class="card">
+        <h2>Low-stock watchlist</h2>
+        <p class="subtle"></p>
+        <table>
+          <thead><tr><th>Title</th><th>Stock</th><th>Price</th></tr></thead>
+          <tbody id="lowStockBody"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Highest-priced titles</h2>
+        <p class="subtle"></p>
+        <table>
+          <thead><tr><th>Title</th><th>Price</th><th>Stock</th></tr></thead>
+          <tbody id="highPriceBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>Database table overview</h2>
+        <p class="subtle"></p>
+        <div class="schema-grid" id="schemaGrid"></div>
+        <div class="foot"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>Explore the book catalog</h2>
+        <p class="subtle">Search by title, author, publisher, or category.</p>
+        <input id="search" class="search" type="text" placeholder="Search books, authors, publishers, or categories..." />
+        <table>
+          <thead>
+            <tr><th>Title</th><th>Author(s)</th><th>Publisher</th><th>Categories</th><th>Price</th><th>Stock</th></tr>
+          </thead>
+          <tbody id="bookBody"></tbody>
+        </table>
+        <div class="foot">Showing the first 40 books from the updated dataset for performance and readability.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const data = {"kpis": {"books": 500, "authors": 614, "publishers": 500, "categories": 288, "customers": 180, "orders": 500, "reviews": 250, "payments": 500, "avg_price": 6.82, "avg_stock": 50.8, "inventory_value": 169443.24, "avg_rating": 4.77, "total_revenue": 4541.86, "order_total": 8267.19}, "categories": [{"label": "General", "value": 161}, {"label": "Fiction", "value": 51}, {"label": "Religion", "value": 28}, {"label": "Business & Economics", "value": 24}, {"label": "Cooking", "value": 23}, {"label": "Biography & Autobiography", "value": 19}, {"label": "History", "value": 14}, {"label": "Health & Fitness", "value": 12}], "publishers": [{"label": "Random House", "value": 15, "avg_price": 6.19}, {"label": "Simon & Schuster", "value": 15, "avg_price": 6.43}, {"label": "HarperCollins", "value": 9, "avg_price": 6.79}, {"label": "Scribner", "value": 9, "avg_price": 8.37}, {"label": "Oxford University Press", "value": 7, "avg_price": 5.44}, {"label": "W. W. Norton & Company", "value": 7, "avg_price": 7.2}, {"label": "Doubleday", "value": 5, "avg_price": 18.44}, {"label": "Dover Publications", "value": 5, "avg_price": 7.46}], "states": [{"label": "TX", "value": 48}, {"label": "CA", "value": 42}, {"label": "DC", "value": 14}, {"label": "FL", "value": 12}, {"label": "AZ", "value": 11}, {"label": "OH", "value": 10}, {"label": "IL", "value": 9}, {"label": "NC", "value": 8}, {"label": "WA", "value": 7}, {"label": "CO", "value": 5}], "priceBands": [{"label": "Under $10", "value": 432}, {"label": "$10–$19.99", "value": 58}, {"label": "$20–$49.99", "value": 9}, {"label": "$50+", "value": 1}], "orderStatus": [{"label": "Shipped", "value": 134}, {"label": "Pending", "value": 134}, {"label": "Cancelled", "value": 120}, {"label": "Delivered", "value": 112}], "paymentStatus": [{"label": "Completed", "value": 263}, {"label": "Pending", "value": 237}], "reviewBands": [{"label": "0–1.9", "value": 54}, {"label": "2–3.9", "value": 49}, {"label": "4–5.9", "value": 67}, {"label": "6–7.9", "value": 32}, {"label": "8–10", "value": 48}], "lowStock": [{"title": "Einstein's Monsters", "stock_quantity": 1, "price": 15.4}, {"title": "The Language of Life: A Festival of Poets", "stock_quantity": 1, "price": 10.99}, {"title": "Americas: The Changing Face of Latin America and the Caribbean (A Main Selection of the History Book Club)", "stock_quantity": 1, "price": 6.6}, {"title": "A Son of Thunder: Patrick Henry and the American Republic", "stock_quantity": 1, "price": 5.35}, {"title": "Escape from the CIA: How the CIA Won and Lost the Most Important KGB Spy Ever to Defect to the U.S.", "stock_quantity": 1, "price": 5.29}, {"title": "Magnet Therapy: The Pain Cure Alternative", "stock_quantity": 1, "price": 5.29}, {"title": "I Hate School: How to Hang in and When to Drop Out", "stock_quantity": 1, "price": 5.29}, {"title": "Herbal Medicine", "stock_quantity": 1, "price": 5.29}, {"title": "Life and Death in Shanghai", "stock_quantity": 1, "price": 5.29}, {"title": "George Meany And His Times: A Biography", "stock_quantity": 1, "price": 4.99}], "highPrice": [{"title": "Rogue Regimes: Terrorism and Proliferation", "price": 58.61, "stock_quantity": 30}, {"title": "A Prophet In His Own Country: The Triumphs and Defeats of Adlai E. Stevenson", "price": 36.61, "stock_quantity": 3}, {"title": "Inference of guilt", "price": 36.2, "stock_quantity": 26}, {"title": "The History of the American Sailing Navy: The Ships and Their Development", "price": 29.29, "stock_quantity": 27}, {"title": "The uncommon cookbook", "price": 24.26, "stock_quantity": 77}, {"title": "Buffalo Gordon", "price": 23.11, "stock_quantity": 42}, {"title": "Stanley Elkin's Greatest Hits", "price": 21.95, "stock_quantity": 99}, {"title": "Rooster crows for day,", "price": 21.95, "stock_quantity": 32}, {"title": "Maryland Today", "price": 21.83, "stock_quantity": 43}, {"title": "The Witling", "price": 20.85, "stock_quantity": 80}], "books": [{"title": "1-2-3 Murals: Simple Murals to Make from Children's Open-Ended Art", "publisher": "Warren Publishing House, Inc.", "price": 5.29, "stock": 76, "authors": "Jean Warren", "categories": "[Uncategorized]"}, {"title": "100 Favorite Roses (100 Favorite Series)", "publisher": "Metro Books", "price": 5.29, "stock": 41, "authors": "Teri Dunn", "categories": "Gardening,Flowers,Annuals"}, {"title": "13 Things You Gotta Know to Make it as a Christian (Powerlink Student Devotional)", "publisher": "Thomas Nelson", "price": 4.99, "stock": 50, "authors": "Josh McDowell,Bob Hostetler", "categories": "General,Young Adult Nonfiction,Religious,Christian"}, {"title": "1776-1976: Zweihundert Jahre deutsch-amerikanische Beziehungen = two hundred years of German-American relations : eine Dokumentation (German Edition)", "publisher": "H. Moos", "price": 10.99, "stock": 41, "authors": "Thomas Piltz", "categories": "[Uncategorized]"}, {"title": "24 Essential Lessons for Investment Success: Learn the Most Important Investment Techniques from the Founder of Investor's Business Daily", "publisher": "McGraw-Hill", "price": 4.99, "stock": 25, "authors": "William J. O'Neil", "categories": "Business & Economics,Personal Finance,Investing"}, {"title": "25 Bicycle Tours in New Jersey", "publisher": "Countryman Pr", "price": 5.29, "stock": 34, "authors": "Aline Zatz,Joel Zatz", "categories": "Travel,United States,Northeast,Middle Atlantic (NJ,NY,PA)"}, {"title": "500 Full-Size Patchwork Patterns", "publisher": "Sterling Pub Co Inc", "price": 5.29, "stock": 68, "authors": "Maggie Malone", "categories": "General,Art"}, {"title": "550 Home Landscaping Ideas", "publisher": "Simon & Schuster", "price": 10.99, "stock": 4, "authors": "Derek Fell,Catriona Erler", "categories": "General,Gardening"}, {"title": "A Book of Americans", "publisher": "Farrar and Rinehart, inc", "price": 15.4, "stock": 60, "authors": "Rosemary Benet", "categories": "[Uncategorized]"}, {"title": "A Man for All Seasons: A Play in Two Acts", "publisher": "Vintage", "price": 5.29, "stock": 19, "authors": "Robert Bolt", "categories": "Drama,European,English,Irish,Scottish,Welsh"}, {"title": "A Manual for Writers of Term Papers, Theses, and Dissertations, Fifth Edition", "publisher": "University of Chicago Press", "price": 4.99, "stock": 19, "authors": "Kate L. Turabian", "categories": "[Uncategorized]"}, {"title": "A Midsummer Night's Dream (Oxford World's Classics)", "publisher": "Oxford University Press", "price": 5.29, "stock": 36, "authors": "William Shakespeare,Peter (EDT) Holland", "categories": "Drama,European,English,Irish,Scottish,Welsh"}, {"title": "A Passion for Golf: The Best of Golf Writing", "publisher": "Thomas Dunne Books", "price": 5.58, "stock": 39, "authors": "John (INT) Garrity,Schuyler (EDT) Bishop", "categories": "Sports & Recreation,Golf"}, {"title": "A Portfolio of Outdoor Furnishing Ideas (Portfolio Ofideas)", "publisher": "Cowles Creative Publishing", "price": 4.99, "stock": 69, "authors": "Cy Decosse Inc Cowles Creative Publishing", "categories": "General,Architecture,Interior Design"}, {"title": "A Prophet In His Own Country: The Triumphs and Defeats of Adlai E. Stevenson", "publisher": "Doubleday", "price": 36.61, "stock": 3, "authors": "Kenneth S. Davis", "categories": "[Uncategorized]"}, {"title": "A Separate Peace with Connections (HRW Library)", "publisher": "Holt McDougal", "price": 5.29, "stock": 84, "authors": "Holt Mcdougal (COR)", "categories": "General,Young Adult Fiction"}, {"title": "A Shaker's Dozen", "publisher": "Chronicle Books", "price": 5.29, "stock": 59, "authors": "Paul (ILT) Rocheleau,Kathleen Homsen", "categories": "Juvenile Nonfiction,Concepts,Counting & Numbers"}, {"title": "A Sister Is Forever: A Blue Mountain Arts Collection for One of the Most Beautiful People You'll Ever Know", "publisher": "Blue Mountain Arts", "price": 4.99, "stock": 49, "authors": "Gary (EDT) Morris,Blue Mountain Arts Collection (COR)", "categories": "Family & Relationships,Siblings"}, {"title": "A Son of Thunder: Patrick Henry and the American Republic", "publisher": "Grove Press", "price": 5.35, "stock": 1, "authors": "Henry Mayer", "categories": "Biography & Autobiography,Political"}, {"title": "A Tale of Two Cities (Oxford World's Classics)", "publisher": "Oxford University Press", "price": 5.29, "stock": 98, "authors": "Charles Dickens,Andrew (EDT) Sanders", "categories": "Fiction,Classics"}, {"title": "A Taste for Love: A Romantic Cookbook for Two", "publisher": "Gramercy", "price": 5.29, "stock": 56, "authors": "Elizabeth M. Harbison,Mary McGowan", "categories": "General,Cooking,Courses & Dishes"}, {"title": "A Thing or Two About Soccer", "publisher": "A Thing or Two Media", "price": 5.29, "stock": 3, "authors": "James, Teitelbaum, Michael, Buckley,Rick (FRW) Wolff", "categories": "Sports & Recreation,Soccer"}, {"title": "A Woman of Egypt", "publisher": "Simon & Schuster", "price": 8.79, "stock": 82, "authors": "Jehan Sadat", "categories": "Biography & Autobiography,Presidents & Heads of State"}, {"title": "A birthday gift for Mommi", "publisher": "Victor Books", "price": 5.86, "stock": 89, "authors": "V. Gilbert Beers", "categories": "[Uncategorized]"}, {"title": "A delicately personal matter: A J.D. Mulroy mystery novel", "publisher": "Dodd, Mead", "price": 5.29, "stock": 29, "authors": "Richard R. Werry", "categories": "[Uncategorized]"}, {"title": "Aditi: The Living Arts of India", "publisher": "Smithsonian Institution Press", "price": 10.99, "stock": 57, "authors": "Robert Adams,Rajeev (EDT) Sethi", "categories": "[Uncategorized]"}, {"title": "Adventuring Along the Southeast Coast: The Sierra Club Guide to the Low Country, Beaches, and Barrier Islands of North Carolina, South Carolina, and (Sierra Club Adventure Travel Guides)", "publisher": "Sierra Club Books", "price": 5.29, "stock": 96, "authors": "John Bowen", "categories": "Travel,United States,South,South Atlantic (DC,DE,FL,GA,MD,NC,SC,VA,WV)"}, {"title": "Ain't You Glad You Joined the Republicans?: A Short History of the Gop", "publisher": "Henry Holt & Co", "price": 5.76, "stock": 3, "authors": "John Calvin Batchelor", "categories": "General,Political Science"}, {"title": "Alcatraz '46;: The anatomy of a classic prison tragedy,", "publisher": "Leswing Press", "price": 5.29, "stock": 84, "authors": "Philip Bergen Don DeNevi", "categories": "[Uncategorized]"}, {"title": "All Around The Town", "publisher": "Simon & Schuster", "price": 4.99, "stock": 56, "authors": "Mary Higgins Clark", "categories": "Fiction,Thrillers,Suspense"}, {"title": "All over but the Shoutin'", "publisher": "Vintage", "price": 4.89, "stock": 26, "authors": "Rick Bragg", "categories": "Biography & Autobiography,Personal Memoirs"}, {"title": "American Artists On Art: From 1940 To 1980 (Icon Editions)", "publisher": "Routledge", "price": 5.29, "stock": 18, "authors": "Ellen H. (EDT) Johnson", "categories": "Art,Criticism & Theory"}, {"title": "American Dreams: Lost & Found", "publisher": "Pantheon", "price": 10.99, "stock": 78, "authors": "Studs Terkel", "categories": "[Uncategorized]"}, {"title": "Americas: The Changing Face of Latin America and the Caribbean (A Main Selection of the History Book Club)", "publisher": "University of California Press", "price": 6.6, "stock": 1, "authors": "Peter Winn", "categories": "Social Science,Anthropology,Cultural & Social"}, {"title": "Amy Spangler's Breastfeeding : A Parent's Guide", "publisher": "Amy Spangler", "price": 5.32, "stock": 71, "authors": "Amy Spangler", "categories": "[Uncategorized]"}, {"title": "An Atlas of the Difficult World: Poems 1988-1991", "publisher": "W. W. Norton & Company", "price": 4.99, "stock": 16, "authors": "Adrienne Cecile Rich", "categories": "General,Poetry,American"}, {"title": "An East Wind Coming", "publisher": "Berkley", "price": 5.29, "stock": 5, "authors": "Arthur Byron Cover", "categories": "[Uncategorized]"}, {"title": "An essay on morals", "publisher": "Rinehart & Company, Inc", "price": 4.99, "stock": 17, "authors": "Philip Wylie", "categories": "[Uncategorized]"}, {"title": "Analyzing Performance Problems, or You Really Oughta Wanna", "publisher": "Pitman Management and Training", "price": 5.29, "stock": 82, "authors": "Peter Pipe Robert Frank Mager", "categories": "[Uncategorized]"}, {"title": "Are You Considering Psychoanalysis?", "publisher": "W. W. Norton & Company, Inc.", "price": 5.29, "stock": 33, "authors": "Karen (EDT) Horney", "categories": "General,Psychology"}], "schema": [{"name": "customers", "rows": 180, "kind": "core entity"}, {"name": "publishers", "rows": 500, "kind": "core entity"}, {"name": "books", "rows": 500, "kind": "core entity"}, {"name": "authors", "rows": 614, "kind": "core entity"}, {"name": "categories", "rows": 288, "kind": "core entity"}, {"name": "book_authors", "rows": 614, "kind": "bridge table"}, {"name": "book_categories", "rows": 890, "kind": "bridge table"}, {"name": "orders", "rows": 500, "kind": "commerce table"}, {"name": "order_items", "rows": 500, "kind": "bridge table"}, {"name": "payments", "rows": 500, "kind": "commerce table"}, {"name": "reviews", "rows": 250, "kind": "engagement table"}]};
+
+    const makeBars = (items, targetId, formatter = (n) => n) => {
+      const target = document.getElementById(targetId);
+      const max = Math.max(...items.map(x => x.value), 1);
+      target.innerHTML = items.map(item => `
+        <div class="bar-row">
+          <div class="name">${item.label}</div>
+          <div class="bar"><div class="fill" style="width:${(item.value / max) * 100}%"></div></div>
+          <div class="val">${formatter(item.value, item)}</div>
+        </div>`).join('');
+    };
+
+    makeBars(data.categories, 'categoryBars');
+    makeBars(data.publishers, 'publisherBars', (n, item) => `${n} books`);
+    makeBars(data.priceBands, 'priceBars', n => `${n}`);
+    makeBars(data.orderStatus, 'orderStatusBars', n => `${n} orders`);
+    makeBars(data.paymentStatus, 'paymentStatusBars', n => `${n} payments`);
+
+    document.getElementById('statePills').innerHTML = data.states.map(s => `<div class="pill"><strong>${s.label}</strong>&nbsp;•&nbsp;${s.value}</div>`).join('');
+
+    const td = (value, cls='') => `<td class="${cls}">${value}</td>`;
+
+    document.getElementById('lowStockBody').innerHTML = data.lowStock.map(r => `<tr>${td(r.title)}${td(r.stock_quantity)}${td('$' + Number(r.price).toFixed(2))}</tr>`).join('');
+    document.getElementById('highPriceBody').innerHTML = data.highPrice.map(r => `<tr>${td(r.title)}${td('$' + Number(r.price).toFixed(2))}${td(r.stock_quantity)}</tr>`).join('');
+
+    document.getElementById('schemaGrid').innerHTML = data.schema.map(t => `
+      <div class="schema-item">
+        <div class="t">${t.name}</div>
+        <div class="meta">${t.kind}</div>
+        <div class="rows">${t.rows}</div>
+      </div>`).join('');
+
+    const bookBody = document.getElementById('bookBody');
+    const renderBooks = (query = '') => {
+      query = query.trim().toLowerCase();
+      const filtered = data.books.filter(b => !query || [b.title, b.authors, b.publisher, b.categories].join(' ').toLowerCase().includes(query));
+      bookBody.innerHTML = filtered.map(b => `<tr>
+        ${td(b.title)}
+        ${td(b.authors, 'muted')}
+        ${td(b.publisher)}
+        ${td(b.categories, 'muted')}
+        ${td('$' + Number(b.price).toFixed(2))}
+        ${td(b.stock)}
+      </tr>`).join('') || `<tr><td colspan="6" class="muted">No matching books found.</td></tr>`;
+    };
+    renderBooks();
+    document.getElementById('search').addEventListener('input', e => renderBooks(e.target.value));
+  </script>
+</body>
+</html>
